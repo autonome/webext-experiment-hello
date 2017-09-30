@@ -12,11 +12,11 @@
     in api.js and schema.json.
   -->
   <Description about="urn:mozilla:install-manifest">
-    <em:id>showonlythesetabs@experiments.addons.mozilla.org</em:id>
-    <em:name>showOnlyTheseTabs API</em:name>
+    <em:id>tabshideshow@experiments.addons.mozilla.org</em:id>
+    <em:name>Tabs hide/show APIs</em:name>
     <em:type>256</em:type>
     <em:version>0.1</em:version>
-    <em:description>showOnlyTheseTabs API</em:description>
+    <em:description>Tabs hide/show APIs</em:description>
     <em:creator>Dietrich Ayala</em:creator>
 
     <em:targetApplication>

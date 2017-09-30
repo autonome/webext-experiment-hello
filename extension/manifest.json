@@ -10,8 +10,10 @@
     "default_icon": {
       "16": "icons/icon.png",
       "32": "icons/icon@2x.png"
-    }
+    },
+    "default_title": "Tabs Hide/Show",
+    "default_popup": "popup.html"
   },
 
-  "permissions": [ "experiments.showonlythesetabs" ]
+  "permissions": [ "experiments.tabshideshow" ]
 }

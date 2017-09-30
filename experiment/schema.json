@@ -1,11 +1,24 @@
 [
   {
-    "namespace": "showonlythesetabs",
-    "description": "WebExtension API to show only some tabs on the tab strip.",
-    "permissions": ["experiments.showonlythesetabs"],
+    "namespace": "tabshideshow",
+    "description": "WebExtension APIs to show and hide sets of tabs on the tab strip.",
+    "permissions": ["experiments.tabshideshow"],
     "functions": [
       {
-        "name": "showOnlyTheseTabs",
+        "name": "show",
+        "type": "function",
+        "description": "Returns nothing.",
+        "async": true,
+        "parameters": [
+          {
+            "name": "tabIds",
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        ]
+      },
+      {
+        "name": "hide",
         "type": "function",
         "description": "Returns nothing.",
         "async": true,
