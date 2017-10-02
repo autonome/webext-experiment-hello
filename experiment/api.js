@@ -4,48 +4,79 @@ const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 
 TODO
 
-* Always at least one tab visible. Pick either exception or leave one visible.
+* Implement events
+  * onShow
+  * onHide
+
+* Implement tab.visible
+
+* Always at least one tab visible.
+  * First confirm existing behavior of hide all.
+  * Either throw exception or leave one tab visible.
 
 * Pinned tabs - test how they're handled.
 
-* Promisify
 
-* Non-exclusive approach: If show(1, 3), 2 is still visible. If hide(1, 3), 2 is still visible.
-
-Pseudocode:
-
-show([ids])
-  get all as native tabs
-  get all tab ids
-  filter to sets visible/hidden
-  tabbrower.showOnlyTheseTabs(visible)
 
 */
 
-function getAllTabIds() {
-  var nativeTabs = context.extension.tabManager.query({}, context);
-  var tabIds = nativeTabs.map(nativeTab => tabTracker.getId(nativeTab));
+function show(tabIds, context) {
+  // Get tabbrowser
+  // TODO: Hack to work only in single window, until I can get at ext-browser.js's tabTracker.
+  var tabbrowser = getTabbrowser();
 
-  return tabIds;
+  // Get all visible native tabs
+  var visibleTabs = [];
+  for (let tab of tabbrowser.tabs) {
+    if (tab.hidden === false) {
+      visibleTabs.push(tab);
+    }
+  }
 
-  //let tabs = tabIds.map(tabId => tabTracker.getTab(tabId));
-  //for (let nativeTab of tabs) {
-}
-
-function nativeShowOnlyTheseTabs(tabIds) {
-  // Convert tab ids into XUL tabs
-  var tabs = tabIds.map(function(tab) {
-    return context.extension.tabManager.get(tab.id, null);
+  // Add newly visible tabs to array of visible native tabs
+  tabIds.forEach(function(tabId) {
+    visibleTabs.push(context.extension.tabManager.get(tabId, null).nativeTab);
   });
 
+  // Make them visible
+  tabbrowser.showOnlyTheseTabs(visibleTabs)
+  
+  // TODO: Fire onShow event for newly visible tabs
+}
+
+function hide(tabIds, context) {
+  // Get native tabs for tab ids
+  var tabsToHide = tabIds.map(function(tabId) {
+    return context.extension.tabManager.get(tabId, null).nativeTab;
+  });
+
+  // Get tabbrowser
+  //
+  // TODO: Hack to work only in single window, until I
+  // can get at ext-browser.js's tabTracker.
+  var tabbrowser = getTabbrowser();
+
+  // Get array of remaining visible native tabs
+  var visibleTabs = [];
+  for (let tab of tabbrowser.tabs) {
+    if (tabsToHide.indexOf(tab) == -1) {
+      visibleTabs.push(tab);
+    }
+  }
+
+  // Set visible tabs
+  tabbrowser.showOnlyTheseTabs(visibleTabs)
+
+  // TODO: Fire onHide event for newly hidden tabs
+}
+
+function getTabbrowser() {
   // Get current browser window
   var wm = Cc["@mozilla.org/appshell/window-mediator;1"]
            .getService(Ci.nsIWindowMediator);
   var browserWindow = wm.getMostRecentWindow("navigator:browser");
 
-  // Set visible tabs
-  var tabbrowser = browserWindow.gBrowser;
-  tabbrowser.showOnlyTheseTabs(tabs);
+  return browserWindow.gBrowser;
 }
 
 class API extends ExtensionAPI {
@@ -53,16 +84,15 @@ class API extends ExtensionAPI {
     return {
       // Insert Experiment API here.
       // Note: the namespace (boilerplate must match the id in the install.rdf)
-      show: {
+      tabshideshow: {
         async show(tabIds) {
-          nativeShowOnlyTheseTabs(tabIds);
-        }
-      },
-      hide: {
+          show(tabIds, context);
+        },
         async hide(tabIds) {
-          nativeShowOnlyTheseTabs(tabIds);
+          hide(tabIds, context);
         }
       }
     };
   }
 }
+
