@@ -1,7 +1,7 @@
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("toggletabbar")) {
-    browser.tabshideshow.getIsVisible().then(isVisible => {
+    browser.tabshideshow.getTabBarVisible().then(isVisible => {
       browser.tabshideshow.setTabBarVisible(!isVisible);
       window.close();
     });

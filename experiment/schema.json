@@ -5,7 +5,7 @@
     "permissions": ["experiments.tabshideshow"],
     "functions": [
 			{
-        "name": "getIsVisible",
+        "name": "getTabBarVisible",
         "type": "function",
         "description": "Returns the visibility of the tabstrip.",
         "async": true,

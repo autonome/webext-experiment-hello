@@ -125,85 +125,6 @@ function showTabBar(window) {
 }
 
 
-/*
-let tabsVisilityTracker = new EventEmitter();
-let tabVisibilityManager = {
-  // Set of extension contexts that requested the tabstrip to be hidden.
-  tabHidingContexts: new Set(),
-
-  get tabsVisibility() {
-    return this.tabHidingContexts.size == 0;
-  },
-
-  set tabsVisibility(isVisible) {
-    this._updateCurrentWindowsTabsVisibility(isVisible);
-
-    if (!isVisible) {
-      tabsVisilityTracker.emit("visibilityChange", true);
-
-      this._hideTabs = (window) => {
-        // The titlebar height is calculated dynamically, let TabsInTitlebar
-        // do its job first then collapse the tabstrip on the next tick.
-        Promise.resolve().then(() => {
-          this._updateTabsVisibility(window, false);
-        });
-      };
-
-      windowTracker.addOpenListener(this._hideTabs);
-    } else {
-      tabsVisilityTracker.emit("visibilityChange", false);
-      windowTracker.removeOpenListener(this._hideTabs);
-    }
-  },
-
-  _updateCurrentWindowsTabsVisibility(isVisible) {
-    for (let window of windowTracker.browserWindows()) {
-      this._updateTabsVisibility(window, isVisible);
-    }
-  },
-
-  _updateTabsVisibility(window, isVisible) {
-    let toolbar = window.document.getElementById("TabsToolbar");
-    if (isVisible) {
-      toolbar.classList.remove("webext-collapsed");
-    } else {
-      toolbar.classList.add("webext-collapsed");
-    }
-  },
-
-  // Do not call directly. Called by contexts when they shut down.
-  close(context) {
-    this.tabHidingContexts.delete(context);
-    if (this.tabHidingContexts.size == 0) {
-      this.tabsVisibility = true;
-    }
-  },
-
-  setTabsVisibility(context, visible) {
-    if (!visible) {
-      if (this.tabHidingContexts.has(context)) {
-        return;
-      }
-      let wasVisible = this.tabsVisibility;
-      this.tabHidingContexts.add(context);
-      context.callOnClose(this);
-      // First context asking the tabstrip to be hidden.
-      if (wasVisible) {
-        this.tabsVisibility = false;
-      }
-    } else {
-      // Visible true always takes priority: clear everyone.
-      for (let context of this.tabHidingContexts) {
-        context.forgetOnClose(this);
-      }
-      this.tabHidingContexts.clear();
-      this.tabsVisibility = true;
-    }
-  }
-};
-*/
-
-
 /**********************************************************
 
 Register APIs
@@ -223,7 +144,7 @@ class API extends ExtensionAPI {
         async hide(tabIds) {
           hide(tabIds, context);
         },
-        async getIsVisible() {
+        async getTabBarVisible() {
           return tabsVisible;
         },
         async setTabBarVisible(visible) {
