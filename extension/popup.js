@@ -1,30 +1,37 @@
 
 document.addEventListener("click", (e) => {
-  // Get all tabs
-  browser.tabs.query({currentWindow: true}).then(tabs => {
+  if (e.target.classList.contains("toggletabbar")) {
+    browser.tabshideshow.getIsVisible().then(isVisible => {
+      browser.tabshideshow.setTabBarVisible(!isVisible);
+      window.close();
+    });
+  }
+  else {
+    // Get all tabs
+    browser.tabs.query({currentWindow: true}).then(tabs => {
+      // Get all tab ids as array
+      var ids = tabs.map(tab => tab.id);
 
-    // Get all tab ids as array
-    var ids = tabs.map(tab => tab.id);
-
-    // Show some tabs, and hide the rest
-    if (e.target.classList.contains("showsome")) {
-      var [showIds, hideIds] = randomSetFromArray(ids);
-      browser.tabshideshow.show(showIds);
-    }
-    // Hide some tabs, show the rest
-    if (e.target.classList.contains("hidesome")) {
-      var [showIds, hideIds] = randomSetFromArray(ids);
-      browser.tabshideshow.hide(hideIds);
-    }
-    // Show all
-    else if (e.target.classList.contains("showall")) {
-      browser.tabshideshow.show(ids);
-    }
-    // Hide all (should fail unless there are pinned tabs)
-    else if (e.target.classList.contains("hideall")) {
-      browser.tabshideshow.hide(ids);
-    }
-  });
+      // Show some tabs, and hide the rest
+      if (e.target.classList.contains("showsome")) {
+        var [showIds, hideIds] = randomSetFromArray(ids);
+        browser.tabshideshow.show(showIds);
+      }
+      // Hide some tabs, show the rest
+      if (e.target.classList.contains("hidesome")) {
+        var [showIds, hideIds] = randomSetFromArray(ids);
+        browser.tabshideshow.hide(hideIds);
+      }
+      // Show all
+      else if (e.target.classList.contains("showall")) {
+        browser.tabshideshow.show(ids);
+      }
+      // Hide all (should fail unless there are pinned tabs)
+      else if (e.target.classList.contains("hideall")) {
+        browser.tabshideshow.hide(ids);
+      }
+    });
+  }
 });
 
 function randomIntInRange(min, max) {

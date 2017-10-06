@@ -4,6 +4,22 @@
     "description": "WebExtension APIs to show and hide sets of tabs on the tab strip.",
     "permissions": ["experiments.tabshideshow"],
     "functions": [
+			{
+        "name": "getIsVisible",
+        "type": "function",
+        "description": "Returns the visibility of the tabstrip.",
+        "async": true,
+        "parameters": []
+			},
+      {
+        "name": "setTabBarVisible",
+        "type": "function",
+        "description": "Sets the visibility of the tabstrip.",
+        "async": true,
+        "parameters": [{
+          "type": "boolean"
+        }]
+    	},
       {
         "name": "show",
         "type": "function",
@@ -29,6 +45,55 @@
             "items": { "type": "number" }
           }
         ]
+      }
+    ],
+    "properties": {
+      "browser_region_tweak": {
+        "type": "object",
+        "properties": {
+          "navigation_bar": {
+            "optional": true,
+            "$ref": "Region"
+          },
+          "tabs_bar": {
+            "optional": true,
+            "$ref": "Region"
+          },
+          "find_bar": {
+            "optional": true,
+            "$ref": "Region"
+           }
+        },
+        "optional": true
+      }
+    },
+    "types": [
+      {
+        "id": "Region",
+        "type": "object",
+        "properties": {
+          "after": {
+            "type": "string",
+            "enum": [
+              "navigation_bar",
+              "tabs_bar",
+              "find_bar",
+              "top_end",
+              "top_start",
+              "right_end",
+              "right_start",
+              "bottom_end",
+              "bottom_start",
+              "left_end",
+              "left_start"
+            ],
+            "optional": true
+          },
+          "visible": {
+            "type": "boolean",
+            "optional": true
+          }
+        }
       }
     ]
   }
